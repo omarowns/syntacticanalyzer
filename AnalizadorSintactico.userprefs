@@ -2,8 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico/AnalizadorSintactico.cs">
     <Files>
-      <File FileName="AnalizadorSintactico/AnalizadorSintactico.cs" Line="75" Column="11" />
-      <File FileName="AnalizadorSintactico/AnalizadorLexico.cs" Line="6" Column="8" />
+      <File FileName="AnalizadorSintactico/AnalizadorSintactico.cs" Line="91" Column="48" />
+      <File FileName="AnalizadorSintactico/TreeNode.cs" Line="10" Column="29" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

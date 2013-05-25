@@ -334,4 +334,7 @@ public class AnalizadorLexico{
 public class Token{
 	public AnalizadorLexico.TipoToken tt;
 	public string lexema = "";
+	public override string ToString(){
+		return "( " + this.tt + ", " + this.lexema + " )";
+	}
 }
