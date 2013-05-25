@@ -1,20 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico/Tree.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico/Program.cs">
     <Files>
       <File FileName="AnalizadorSintactico/Program.cs" Line="4" Column="1" />
-      <File FileName="AnalizadorSintactico/Tree.cs" Line="3" Column="2" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="AnalizadorSintactico" expanded="True">
-            <Node name="Tree.cs" selected="True" />
-          </Node>
+          <Node name="AnalizadorSintactico" expanded="True" selected="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
-        <State expanded="True" selected="True" />
+        <State selected="True" />
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
