@@ -277,11 +277,13 @@ public class AnalizadorLexico{
 				cadena = linea.ToCharArray ();
 				numLinea++;
 				index = 0;
-				t.lexema = "";
+				t = analizador ();
 			} else {
 				t.tt = TipoToken.TK_EOF;
 			}
 		}
+		if ((t.tt == TipoToken.TK_COMENTARIO_LINEA) || (t.tt == TipoToken.TK_BLOQUE_C_I) || (t.tt == TipoToken.TK_BLOQUE_C_D))
+			t = analizador ();
 		return t;
 	}
 	private void finToken(){

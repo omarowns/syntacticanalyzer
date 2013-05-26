@@ -1,16 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico\Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico\AnalizadorSintactico.cs">
     <Files>
-      <File FileName="AnalizadorSintactico\AnalizadorSintactico.cs" Line="91" Column="48" />
+      <File FileName="AnalizadorSintactico\AnalizadorSintactico.cs" Line="212" Column="18" />
       <File FileName="AnalizadorSintactico\Program.cs" Line="8" Column="19" />
+      <File FileName="AnalizadorSintactico\AnalizadorLexico.cs" Line="286" Column="1" />
+      <File FileName="AnalizadorSintactico\TreeNode.cs" Line="15" Column="27" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="AnalizadorSintactico" expanded="True">
             <Node name="References" expanded="True" />
-            <Node name="Program.cs" selected="True" />
+            <Node name="AnalizadorSintactico.cs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -19,10 +21,10 @@
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
-          <Value>linea</Value>
-          <Value>cadena</Value>
-          <Value>c</Value>
-          <Value>index</Value>
+          <Value>token.tt</Value>
+          <Value>token.lexema</Value>
+          <Value>t</Value>
+          <Value>n</Value>
         </State>
       </Pad>
     </Pads>

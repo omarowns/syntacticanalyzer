@@ -32,6 +32,7 @@ public class AnalizadorSintactico
 	private string source = "";
 	private AnalizadorLexico al;
 	public Token token;
+	private TreeNode rootNode;
 
 	public AnalizadorSintactico (string src)
 	{
@@ -40,13 +41,14 @@ public class AnalizadorSintactico
 	}
 	
 	public TreeNode parse(){
-		TreeNode t = null;
 		token = al.analizador ();
-		t = program ();
-		return t;
+		rootNode = program ();
 	}
 
 	/* **** UTILS START **** */
+	private TreeNode createNode(){
+
+	}
 	private TreeNode createProgramNode(TreeNode.NodeType type){
 		TreeNode t = new TreeNode ();
 		t.value	= 0;
@@ -113,9 +115,10 @@ public class AnalizadorSintactico
 
 	private TreeNode declaration_list(){
 		TreeNode t, n = null;
-		t = variable_single ();
+		t = variable_type ();
 		while ( (t!=null) && (token.tt == AnalizadorLexico.TipoToken.TK_PUNTOYCOMA) ) {
-			if (n != null) {
+			if (n == null) {
+				n = createDeclNode (TreeNode.DeclType.LIST);
 				n.left = t;
 				n.op = token;
 				t = n;
@@ -126,20 +129,23 @@ public class AnalizadorSintactico
 		return t;
 	}
 
-	private TreeNode variable_single(){
+	private TreeNode variable_type(){
 		TreeNode t = null;
 		switch (token.tt) {
 		case AnalizadorLexico.TipoToken.TK_INT:
+			t = createDeclNode (TreeNode.DeclType.INT);
 			t.left = createDeclNode (TreeNode.DeclType.INT);
 			match (token.tt);
 			t.right = variable_list ();
 			break;
 		case AnalizadorLexico.TipoToken.TK_FLOAT:
+			t = createDeclNode (TreeNode.DeclType.FLOAT);
 			t.left = createDeclNode (TreeNode.DeclType.FLOAT);
 			match (token.tt);
 			t.right = variable_list ();
 			break;
 		case AnalizadorLexico.TipoToken.TK_BOOL:
+			t = createDeclNode (TreeNode.DeclType.BOOL);
 			t.left = createDeclNode (TreeNode.DeclType.BOOL);
 			match (token.tt);
 			t.right = variable_list ();
@@ -148,11 +154,22 @@ public class AnalizadorSintactico
 		return t;
 	}
 
+	private TreeNode variable_single(){
+		TreeNode t = null;
+		if(token.tt==AnalizadorLexico.TipoToken.TK_IDENTIFICADOR){
+			t = createExprNode (TreeNode.ExpType.ID);
+			t.name = token.lexema;
+			match (AnalizadorLexico.TipoToken.TK_IDENTIFICADOR);
+		}
+		return t;
+	}
+
 	private TreeNode variable_list(){
 		TreeNode t,n = null;
 		t = variable_single ();
 		while (token.tt == AnalizadorLexico.TipoToken.TK_COMA) {
-			if (n != null) {
+			if (n == null) {
+				n = createDeclNode (TreeNode.DeclType.LIST);
 				n.left = t;
 				n.op = token;
 				t = n;
@@ -170,11 +187,10 @@ public class AnalizadorSintactico
 		if (n != null) {
 			t = createProgramNode (TreeNode.NodeType.STMT);
 			t.left = n;
-		}
-		n = sentence_list ();
-		if (n != null) {
-			t = createProgramNode (TreeNode.NodeType.STMT);
-			t.right = n;
+			n = sentence_list ();
+			if (n != null) {
+				t.right = n;
+			}
 		}
 		return t;
 	}
@@ -193,6 +209,8 @@ public class AnalizadorSintactico
 		case AnalizadorLexico.TipoToken.TK_WRITE:
 			t = sent_write (); break;
 		case AnalizadorLexico.TipoToken.TK_ASIGNACION:
+			t = asign (); break;
+		case AnalizadorLexico.TipoToken.TK_IDENTIFICADOR:
 			t = asign (); break;
 		default:
 			error ("Unexpected token -> ");
