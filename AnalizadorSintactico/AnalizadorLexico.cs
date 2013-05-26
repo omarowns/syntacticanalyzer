@@ -23,6 +23,7 @@ public class AnalizadorLexico{
 	private char [] cadena;
 	private int index = 0, numLinea = 1;
 	private char c;
+	//TODO corregir true y false tambien son palabras reservadas, tienen que serlo.
 	private string []palabras_reservadas = { "if", "then", "else", "fi", "do", "until", "while", "read", "write", "float", "int", "bool", "program"};
 	private char simboloTemporal;
 	private char []simbolos_divided = {'+', '-', '*', '/', '<', '=', '>', '!', ';', '(', ')', '{', '}' };

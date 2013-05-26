@@ -6,5 +6,6 @@ class MainClass
 	{
 		AnalizadorSintactico syntax = new AnalizadorSintactico(args[0]);
 		syntax.parse ();
+		syntax.print ();
 	}
 }

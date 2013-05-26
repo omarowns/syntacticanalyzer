@@ -40,45 +40,34 @@ public class AnalizadorSintactico
 		al = new AnalizadorLexico (this.source);
 	}
 	
-	public TreeNode parse(){
+	public void parse(){
 		token = al.analizador ();
 		rootNode = program ();
 	}
 
-	/* **** UTILS START **** */
-	private TreeNode createNode(){
+	public void print(){
+		TreeNode t = rootNode;
+		Console.Clear ();
+		subprint (t);
+	}
 
+	private void subprint(TreeNode t){
+		if(t != null) {
+			Console.WriteLine ("Node -> {0}", t.type);
+			if(t.sibling!=null){
+				Console.WriteLine ("Sibling -> {0}", t.sibling);
+			}
+			Console.WriteLine ("Name -> {0}\tValue -> {1}\tToken -> {2}", t.name,t.value,(t.op.tt==AnalizadorLexico.TipoToken.TK_PALABRA_RESERVADA?"":t.op.ToString()));
+			Console.WriteLine ("Left -> {0}\tRight -> {1}\tRightRight -> {2}", t.left,t.right,t.rightright);
+			subprint (t.left);
+			subprint (t.right);
+			subprint (t.rightright);
+		}
+		return;
 	}
-	private TreeNode createProgramNode(TreeNode.NodeType type){
-		TreeNode t = new TreeNode ();
-		t.value	= 0;
-		t.left	= null;
-		t.right	= null;
-		t.typeN = type;
-		return t;
-	}
-	private TreeNode createDeclNode(TreeNode.DeclType type){
-		TreeNode t = new TreeNode ();
-		t.value	= 0;
-		t.left	= null;
-		t.right	= null;
-		t.typeD = type;
-		return t;
-	}
-	private TreeNode createStmtNode(TreeNode.StmtType type){
-		TreeNode t = new TreeNode ();
-		t.value	= 0;
-		t.left	= null;
-		t.right	= null;
-		t.typeS = type;
-		return t;
-	}
-	private TreeNode createExprNode(TreeNode.ExpType type){
-		TreeNode t = new TreeNode ();
-		t.value	= 0;
-		t.left	= null;
-		t.right	= null;
-		t.typeE = type;
+	/* **** UTILS START **** */
+	private TreeNode createNode(TreeNode.NodeType type){
+		TreeNode t = new TreeNode (type);
 		return t;
 	}
 	private void match(AnalizadorLexico.TipoToken expected){
@@ -94,12 +83,13 @@ public class AnalizadorSintactico
 	private void error(string s){
 		Console.Write (s);
 		Console.Write (token.ToString());
+		Console.Write (Environment.NewLine);
 	}
 	/* **** UTILS END **** */
 
 	private TreeNode program(){
 		TreeNode t = null;
-		t = createProgramNode (TreeNode.NodeType.PROGRAM);
+		t = createNode (TreeNode.NodeType.PROGRAM);
 		match (AnalizadorLexico.TipoToken.TK_PROGRAM);
 		match (AnalizadorLexico.TipoToken.TK_LLAVEI);
 		if (t != null) {
@@ -118,7 +108,7 @@ public class AnalizadorSintactico
 		t = variable_type ();
 		while ( (t!=null) && (token.tt == AnalizadorLexico.TipoToken.TK_PUNTOYCOMA) ) {
 			if (n == null) {
-				n = createDeclNode (TreeNode.DeclType.LIST);
+				n = createNode (TreeNode.NodeType.LIST);
 				n.left = t;
 				n.op = token;
 				t = n;
@@ -133,20 +123,20 @@ public class AnalizadorSintactico
 		TreeNode t = null;
 		switch (token.tt) {
 		case AnalizadorLexico.TipoToken.TK_INT:
-			t = createDeclNode (TreeNode.DeclType.INT);
-			t.left = createDeclNode (TreeNode.DeclType.INT);
+			t = createNode (TreeNode.NodeType.INT);
+			t.left = createNode (TreeNode.NodeType.INT);
 			match (token.tt);
 			t.right = variable_list ();
 			break;
 		case AnalizadorLexico.TipoToken.TK_FLOAT:
-			t = createDeclNode (TreeNode.DeclType.FLOAT);
-			t.left = createDeclNode (TreeNode.DeclType.FLOAT);
+			t = createNode (TreeNode.NodeType.FLOAT);
+			t.left = createNode (TreeNode.NodeType.FLOAT);
 			match (token.tt);
 			t.right = variable_list ();
 			break;
 		case AnalizadorLexico.TipoToken.TK_BOOL:
-			t = createDeclNode (TreeNode.DeclType.BOOL);
-			t.left = createDeclNode (TreeNode.DeclType.BOOL);
+			t = createNode (TreeNode.NodeType.BOOL);
+			t.left = createNode (TreeNode.NodeType.BOOL);
 			match (token.tt);
 			t.right = variable_list ();
 			break;
@@ -157,7 +147,7 @@ public class AnalizadorSintactico
 	private TreeNode variable_single(){
 		TreeNode t = null;
 		if(token.tt==AnalizadorLexico.TipoToken.TK_IDENTIFICADOR){
-			t = createExprNode (TreeNode.ExpType.ID);
+			t = createNode (TreeNode.NodeType.ID);
 			t.name = token.lexema;
 			match (AnalizadorLexico.TipoToken.TK_IDENTIFICADOR);
 		}
@@ -169,7 +159,7 @@ public class AnalizadorSintactico
 		t = variable_single ();
 		while (token.tt == AnalizadorLexico.TipoToken.TK_COMA) {
 			if (n == null) {
-				n = createDeclNode (TreeNode.DeclType.LIST);
+				n = createNode (TreeNode.NodeType.LIST);
 				n.left = t;
 				n.op = token;
 				t = n;
@@ -185,7 +175,7 @@ public class AnalizadorSintactico
 		t = null;
 		n = sentence ();
 		if (n != null) {
-			t = createProgramNode (TreeNode.NodeType.STMT);
+			t = createNode (TreeNode.NodeType.STMT);
 			t.left = n;
 			n = sentence_list ();
 			if (n != null) {
@@ -221,7 +211,7 @@ public class AnalizadorSintactico
 
 	private TreeNode selection(){
 		TreeNode t = null;
-		t = createStmtNode (TreeNode.StmtType.SELECT);
+		t = createNode (TreeNode.NodeType.SELECT);
 		match (AnalizadorLexico.TipoToken.TK_IF);
 		match (AnalizadorLexico.TipoToken.TK_PARI);
 		if (t != null)
@@ -239,7 +229,7 @@ public class AnalizadorSintactico
 
 	private TreeNode iteration(){
 		TreeNode t = null;
-		t = createStmtNode (TreeNode.StmtType.ITERATION);
+		t = createNode (TreeNode.NodeType.ITERATION);
 		match (AnalizadorLexico.TipoToken.TK_WHILE);
 		match (AnalizadorLexico.TipoToken.TK_PARI);
 		if(t!=null)
@@ -252,7 +242,7 @@ public class AnalizadorSintactico
 
 	private TreeNode repeat(){
 		TreeNode t = null;
-		t = createStmtNode (TreeNode.StmtType.REPEAT);
+		t = createNode (TreeNode.NodeType.REPEAT);
 		match (AnalizadorLexico.TipoToken.TK_DO);
 		if (t != null)
 			t.left = block ();
@@ -267,7 +257,7 @@ public class AnalizadorSintactico
 
 	private TreeNode sent_read(){
 		TreeNode t = null;
-		t = createStmtNode (TreeNode.StmtType.READ);
+		t = createNode (TreeNode.NodeType.READ);
 		match (AnalizadorLexico.TipoToken.TK_READ);
 		if ((t != null) && (token.tt == AnalizadorLexico.TipoToken.TK_IDENTIFICADOR)) {
 			t.name = token.lexema;
@@ -278,7 +268,7 @@ public class AnalizadorSintactico
 
 	private TreeNode sent_write(){
 		TreeNode t = null;
-		t = createStmtNode (TreeNode.StmtType.WRITE);
+		t = createNode (TreeNode.NodeType.WRITE);
 		match (AnalizadorLexico.TipoToken.TK_WRITE);
 		if ((t != null)) {
 			//TODO Check if right or left
@@ -290,7 +280,7 @@ public class AnalizadorSintactico
 
 	private TreeNode block(){
 		TreeNode t = null;
-		t = createStmtNode (TreeNode.StmtType.BLOCK);
+		t = createNode (TreeNode.NodeType.BLOCK);
 		match (AnalizadorLexico.TipoToken.TK_LLAVEI);
 		t.left = sentence_list ();
 		match (AnalizadorLexico.TipoToken.TK_LLAVED);
@@ -299,7 +289,7 @@ public class AnalizadorSintactico
 
 	private TreeNode asign(){
 		TreeNode t = null;
-		t = createStmtNode (TreeNode.StmtType.ASIGN);
+		t = createNode (TreeNode.NodeType.ASIGN);
 		if ((t != null) && (token.tt == AnalizadorLexico.TipoToken.TK_IDENTIFICADOR)) {
 			t.name = token.lexema;
 		}
@@ -323,7 +313,7 @@ public class AnalizadorSintactico
 			(token.tt==AnalizadorLexico.TipoToken.TK_MAYORIGUAL) ||
 			(token.tt==AnalizadorLexico.TipoToken.TK_CIGUALDAD) ||
 			(token.tt==AnalizadorLexico.TipoToken.TK_CDIFERENTE) ){
-			n = createExprNode(TreeNode.ExpType.RELATION);
+			n = createNode(TreeNode.NodeType.RELATION);
 			if(n!=null){
 				n.left = t;
 				n.op = token;
@@ -340,7 +330,7 @@ public class AnalizadorSintactico
 		TreeNode t, n = null;
 		t = termino ();
 		while( (token.tt==AnalizadorLexico.TipoToken.TK_SUMA) || (token.tt==AnalizadorLexico.TipoToken.TK_RESTA) ){
-			n = createExprNode (TreeNode.ExpType.SUMAOP);
+			n = createNode (TreeNode.NodeType.SUMAOP);
 			if(n!=null){
 				n.left = t;
 				n.op = token;
@@ -356,7 +346,7 @@ public class AnalizadorSintactico
 		TreeNode t,n = null;
 		t = factor ();
 		while ((token.tt==AnalizadorLexico.TipoToken.TK_MULTIPLICACION) || (token.tt==AnalizadorLexico.TipoToken.TK_DIVISION)) {
-			n = createExprNode (TreeNode.ExpType.MULTOP);
+			n = createNode (TreeNode.NodeType.MULTOP);
 			if(n!= null){
 				n.left = t;
 				n.op = token;
@@ -378,12 +368,12 @@ public class AnalizadorSintactico
 			match (AnalizadorLexico.TipoToken.TK_PARD);
 			break;
 		case AnalizadorLexico.TipoToken.TK_NUMERO:
-			t = createExprNode (TreeNode.ExpType.CONST);
+			t = createNode (TreeNode.NodeType.CONST);
 			t.value = int.Parse (token.lexema);
 			match (AnalizadorLexico.TipoToken.TK_NUMERO);
 			break;
 		case AnalizadorLexico.TipoToken.TK_IDENTIFICADOR:
-			t = createExprNode (TreeNode.ExpType.ID);
+			t = createNode (TreeNode.NodeType.ID);
 			t.name = token.lexema;
 			match (AnalizadorLexico.TipoToken.TK_IDENTIFICADOR);
 			break;
