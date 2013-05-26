@@ -19,6 +19,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <Externalconsole>true</Externalconsole>
+    <Commandlineparameters>"C:\Users\Omar\Development\syntacticanalyzer\test\programa.txt"</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>
@@ -36,6 +37,7 @@
     <Compile Include="TreeNode.cs" />
     <Compile Include="AnalizadorSintactico.cs" />
     <Compile Include="AnalizadorLexico.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

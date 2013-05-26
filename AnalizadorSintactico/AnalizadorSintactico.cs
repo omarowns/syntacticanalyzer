@@ -38,15 +38,29 @@ public class AnalizadorSintactico
 		this.source = src;
 		al = new AnalizadorLexico (this.source);
 	}
+	
+	public TreeNode parse(){
+		TreeNode t = null;
+		token = al.analizador ();
+		t = program ();
+		return t;
+	}
 
 	/* **** UTILS START **** */
-	
 	private TreeNode createProgramNode(TreeNode.NodeType type){
 		TreeNode t = new TreeNode ();
 		t.value	= 0;
 		t.left	= null;
 		t.right	= null;
 		t.typeN = type;
+		return t;
+	}
+	private TreeNode createDeclNode(TreeNode.DeclType type){
+		TreeNode t = new TreeNode ();
+		t.value	= 0;
+		t.left	= null;
+		t.right	= null;
+		t.typeD = type;
 		return t;
 	}
 	private TreeNode createStmtNode(TreeNode.StmtType type){
@@ -74,21 +88,94 @@ public class AnalizadorSintactico
 	}
 	private void error(){
 		Console.WriteLine ("Syntax error");
-		Console.ReadKey ();
 	}
 	private void error(string s){
 		Console.Write (s);
 		Console.Write (token.ToString());
-		Console.ReadKey ();
-		token = al.analizador ();
 	}
 	/* **** UTILS END **** */
 
-	private TreeNode stmt_sentence(){
+	private TreeNode program(){
+		TreeNode t = null;
+		t = createProgramNode (TreeNode.NodeType.PROGRAM);
+		match (AnalizadorLexico.TipoToken.TK_PROGRAM);
+		match (AnalizadorLexico.TipoToken.TK_LLAVEI);
+		if (t != null) {
+			t.left = declaration_list ();
+			t.right = sentence_list ();
+		}
+		match (AnalizadorLexico.TipoToken.TK_LLAVED);
+		if (token.tt == AnalizadorLexico.TipoToken.TK_PROGRAM) {
+			t.sibling = program ();
+		}
+		return t;
+	}
+
+	private TreeNode declaration_list(){
+		TreeNode t, n = null;
+		t = variable_single ();
+		while ( (t!=null) && (token.tt == AnalizadorLexico.TipoToken.TK_PUNTOYCOMA) ) {
+			if (n != null) {
+				n.left = t;
+				n.op = token;
+				t = n;
+				match (token.tt);
+				t.right = declaration_list ();
+			}
+		}
+		return t;
+	}
+
+	private TreeNode variable_single(){
+		TreeNode t = null;
+		switch (token.tt) {
+		case AnalizadorLexico.TipoToken.TK_INT:
+			t.left = createDeclNode (TreeNode.DeclType.INT);
+			match (token.tt);
+			t.right = variable_list ();
+			break;
+		case AnalizadorLexico.TipoToken.TK_FLOAT:
+			t.left = createDeclNode (TreeNode.DeclType.FLOAT);
+			match (token.tt);
+			t.right = variable_list ();
+			break;
+		case AnalizadorLexico.TipoToken.TK_BOOL:
+			t.left = createDeclNode (TreeNode.DeclType.BOOL);
+			match (token.tt);
+			t.right = variable_list ();
+			break;
+		}
+		return t;
+	}
+
+	private TreeNode variable_list(){
 		TreeNode t,n = null;
-		t = sentence ();
-		n = t;
-		//TODO Implement the statement sentences part
+		t = variable_single ();
+		while (token.tt == AnalizadorLexico.TipoToken.TK_COMA) {
+			if (n != null) {
+				n.left = t;
+				n.op = token;
+				t = n;
+				match (token.tt);
+				t.right = variable_list ();
+			}
+		}
+		return t;
+	}
+
+	private TreeNode sentence_list(){
+		TreeNode t,n = null;
+		t = null;
+		n = sentence ();
+		if (n != null) {
+			t = createProgramNode (TreeNode.NodeType.STMT);
+			t.left = n;
+		}
+		n = sentence_list ();
+		if (n != null) {
+			t = createProgramNode (TreeNode.NodeType.STMT);
+			t.right = n;
+		}
 		return t;
 	}
 
@@ -187,7 +274,7 @@ public class AnalizadorSintactico
 		TreeNode t = null;
 		t = createStmtNode (TreeNode.StmtType.BLOCK);
 		match (AnalizadorLexico.TipoToken.TK_LLAVEI);
-		t.left = stmt_sentence ();
+		t.left = sentence_list ();
 		match (AnalizadorLexico.TipoToken.TK_LLAVED);
 		return t;
 	}
@@ -241,7 +328,7 @@ public class AnalizadorSintactico
 				n.op = token;
 				t = n;
 				match (token.tt);
-				t.right = termino ();
+				t.right = expresion_simple ();
 			}
 		}
 		return t;
@@ -257,7 +344,7 @@ public class AnalizadorSintactico
 				n.op = token;
 				t = n;
 				match (token.tt);
-				n.right = factor ();
+				n.right = termino ();
 			}
 		}
 		return t;
@@ -286,13 +373,6 @@ public class AnalizadorSintactico
 			error ("unexpected token -> ");
 			break;
 		}
-		return t;
-	}
-
-	public TreeNode parse(){
-		TreeNode t = null;
-		token = al.analizador ();
-		//t = program ();
 		return t;
 	}
 }
