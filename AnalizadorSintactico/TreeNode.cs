@@ -111,5 +111,10 @@ public class TreeNode
 			break;
 		}
 	}
+
+	public override string ToString ()
+	{
+		return string.Format ("[TreeNode].{0}",this.name);
+	}
 }
 

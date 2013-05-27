@@ -58,7 +58,7 @@ public class AnalizadorSintactico
 				Console.WriteLine ("Sibling -> {0}", t.sibling);
 			}
 			Console.WriteLine ("Name -> {0}\tValue -> {1}\tToken -> {2}", t.name,t.value,(t.op.tt==AnalizadorLexico.TipoToken.TK_PALABRA_RESERVADA?"":t.op.ToString()));
-			Console.WriteLine ("Left -> {0}\tRight -> {1}\tRightRight -> {2}", t.left,t.right,t.rightright);
+			Console.WriteLine ("Left -> {0}\tRight -> {1}\tRightRight -> {2}", (t.left==null?"":t.left.ToString()),(t.right==null?"":t.right.ToString()),(t.rightright==null?"":t.rightright.ToString()));
 			subprint (t.left);
 			subprint (t.right);
 			subprint (t.rightright);

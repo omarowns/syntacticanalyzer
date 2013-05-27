@@ -1,18 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico\AnalizadorSintactico.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico/AnalizadorLexico.cs">
     <Files>
-      <File FileName="AnalizadorSintactico\AnalizadorSintactico.cs" Line="212" Column="18" />
-      <File FileName="AnalizadorSintactico\Program.cs" Line="8" Column="19" />
-      <File FileName="AnalizadorSintactico\AnalizadorLexico.cs" Line="286" Column="1" />
-      <File FileName="AnalizadorSintactico\TreeNode.cs" Line="15" Column="27" />
+      <File FileName="AnalizadorSintactico/AnalizadorSintactico.cs" Line="61" Column="131" />
+      <File FileName="AnalizadorSintactico/TreeNode.cs" Line="117" Column="51" />
+      <File FileName="AnalizadorSintactico/AnalizadorLexico.cs" Line="33" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="AnalizadorSintactico" expanded="True">
             <Node name="References" expanded="True" />
-            <Node name="AnalizadorSintactico.cs" selected="True" />
+            <Node name="AnalizadorLexico.cs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -30,7 +29,9 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/ogarcia/Projects/AnalizadorSintactico/AnalizadorSintactico/AnalizadorSintactico.cs" line="51" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
