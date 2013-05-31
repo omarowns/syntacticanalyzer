@@ -108,7 +108,7 @@ public class AnalizadorSintactico
 		t = variable_type ();
 		while ( (t!=null) && (token.tt == AnalizadorLexico.TipoToken.TK_PUNTOYCOMA) ) {
 			if (n == null) {
-				n = createNode (TreeNode.NodeType.LIST);
+				n = createNode (TreeNode.NodeType.DECLARATION_LIST);
 				n.left = t;
 				n.op = token;
 				t = n;
@@ -123,19 +123,19 @@ public class AnalizadorSintactico
 		TreeNode t = null;
 		switch (token.tt) {
 		case AnalizadorLexico.TipoToken.TK_INT:
-			t = createNode (TreeNode.NodeType.INT);
+			t = createNode (TreeNode.NodeType.DECL);
 			t.left = createNode (TreeNode.NodeType.INT);
 			match (token.tt);
 			t.right = variable_list ();
 			break;
 		case AnalizadorLexico.TipoToken.TK_FLOAT:
-			t = createNode (TreeNode.NodeType.FLOAT);
+			t = createNode (TreeNode.NodeType.DECL);
 			t.left = createNode (TreeNode.NodeType.FLOAT);
 			match (token.tt);
 			t.right = variable_list ();
 			break;
 		case AnalizadorLexico.TipoToken.TK_BOOL:
-			t = createNode (TreeNode.NodeType.BOOL);
+			t = createNode (TreeNode.NodeType.DECL);
 			t.left = createNode (TreeNode.NodeType.BOOL);
 			match (token.tt);
 			t.right = variable_list ();
@@ -159,7 +159,7 @@ public class AnalizadorSintactico
 		t = variable_single ();
 		while (token.tt == AnalizadorLexico.TipoToken.TK_COMA) {
 			if (n == null) {
-				n = createNode (TreeNode.NodeType.LIST);
+				n = createNode (TreeNode.NodeType.COMMA);
 				n.left = t;
 				n.op = token;
 				t = n;
@@ -175,7 +175,7 @@ public class AnalizadorSintactico
 		t = null;
 		n = sentence ();
 		if (n != null) {
-			t = createNode (TreeNode.NodeType.STMT);
+			t = createNode (TreeNode.NodeType.STATEMENT_LIST);
 			t.left = n;
 			n = sentence_list ();
 			if (n != null) {

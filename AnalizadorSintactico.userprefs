@@ -1,17 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico/AnalizadorSintactico.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico/Program.cs">
     <Files>
-      <File FileName="AnalizadorSintactico/AnalizadorSintactico.cs" Line="55" Column="18" />
-      <File FileName="AnalizadorSintactico/TreeNode.cs" Line="1" Column="1" />
-      <File FileName="AnalizadorSintactico/AnalizadorLexico.cs" Line="1" Column="1" />
+      <File FileName="AnalizadorSintactico/TreeNode.cs" Line="23" Column="2" />
+      <File FileName="AnalizadorSintactico/AnalizadorLexico.cs" Line="8" Column="2" />
+      <File FileName="AnalizadorSintactico/Program.cs" Line="10" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="AnalizadorSintactico" expanded="True">
             <Node name="References" expanded="True" />
-            <Node name="AnalizadorSintactico.cs" selected="True" />
+            <Node name="Program.cs" selected="True" />
           </Node>
         </State>
       </Pad>
