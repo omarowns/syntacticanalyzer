@@ -1,0 +1,18 @@
+<html>
+				<body>
+					<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+					<script src="springy.js"></script>
+					<script src="springyui.js"></script>
+					<script>
+						var graph = new Springy.Graph();var _824928960 = graph.newNode({label: 'PROGRAM'});var _784590272 = graph.newNode({label: 'DECLARATION_LIST'});graph.newEdge(_824928960, _784590272, {color: '#00A0B0'});var _558133760 = graph.newNode({label: 'STATEMENT_LIST'});graph.newEdge(_824928960, _558133760, {color: '#00A0B0'});var _159152128 = graph.newNode({label: 'DECLARATION'});graph.newEdge(_784590272, _159152128, {color: '#00A0B0'});var _1143233216 = graph.newNode({label: 'INT'});graph.newEdge(_159152128, _1143233216, {color: '#00A0B0'});var _1183571904 = graph.newNode({label: ','});graph.newEdge(_159152128, _1183571904, {color: '#00A0B0'});var _2127314304 = graph.newNode({label: 'x'});graph.newEdge(_1183571904, _2127314304, {color: '#00A0B0'});var _199490816 = graph.newNode({label: 'y'});graph.newEdge(_1183571904, _199490816, {color: '#00A0B0'});var _1768671360 = graph.newNode({label: 'WRITE'});graph.newEdge(_558133760, _1768671360, {color: '#00A0B0'});var _1900857792 = graph.newNode({label: 'STATEMENT_LIST'});graph.newEdge(_558133760, _1900857792, {color: '#00A0B0'});var _1542214848 = graph.newNode({label: 'x'});graph.newEdge(_1768671360, _1542214848, {color: '#00A0B0'});var _425947328 = graph.newNode({label: 'WRITE'});graph.newEdge(_1900857792, _425947328, {color: '#00A0B0'});var _1410028416 = graph.newNode({label: 'y'});graph.newEdge(_425947328, _1410028416, {color: '#00A0B0'});jQuery(function(){
+				var springy = window.springy = jQuery('#treenode').springy({
+					graph: graph,
+					nodeSelected: function(node){
+	  					console.log('Node selected: ' + JSON.stringify(node.data));
+					}
+				});
+			});
+			</script>
+			<canvas id="treenode" width="1000" height="1000" />
+			</body>
+			</html>
