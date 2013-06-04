@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Diagnostics;
 /*
 		== GRAMATICA == 
 programa → program { lista-declaración lista-sentencias }
@@ -34,6 +36,10 @@ public class AnalizadorSintactico
 	public Token token;
 	private TreeNode rootNode;
 
+	string tempfile = "";
+	FileStream fs = null;
+	StreamWriter sw = null;
+
 	public AnalizadorSintactico (string src)
 	{
 		this.source = src;
@@ -48,7 +54,97 @@ public class AnalizadorSintactico
 	public void print(){
 		TreeNode t = rootNode;
 		Console.Clear ();
+		initFile ();
+		makeSpringy (t,t);
+		closeSpringy ();
+		invokeChrome ();
 		subprint (t);
+	}
+
+	void initFile ()
+	{
+		string path = this.source.Substring(0,this.source.LastIndexOf("/")+1);
+		tempfile = path + @"tmp.html";
+		if (File.Exists (tempfile)) {
+			File.Delete (tempfile);
+		}
+		string html = 
+			@"<html>
+				<body>
+					<script src=""http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js""></script>
+					<script src=""springy.js""></script>
+					<script src=""springyui.js""></script>
+					<script>
+						var graph = new Springy.Graph();";
+		fs = new FileStream (tempfile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+		sw = new StreamWriter(fs);
+		sw.Write (html);
+	}
+
+	void closeSpringy ()
+	{
+		string html =
+			@"jQuery(function(){
+				var springy = window.springy = jQuery('#treenode').springy({
+					graph: graph,
+					nodeSelected: function(node){
+	  					console.log('Node selected: ' + JSON.stringify(node.data));
+					}
+				});
+			});
+			</script>
+			<canvas id=""treenode"" width=""1000"" height=""1000"" />
+			</body>
+			</html>";
+		sw.Write (html);
+		sw.Close ();
+		fs.Close ();
+	}
+
+	void invokeChrome ()
+	{
+		Process.Start (tempfile);
+	}
+
+	private void makeSpringy (TreeNode t,TreeNode a)
+	{
+		string node, nodeS, nodeL, nodeR, nodeRR = "";
+		string edge1, edge2, edge3, edge4 = "";
+		if (t != null) {
+			if ( Math.Abs (t.GetHashCode()).ToString ().Equals (Math.Abs(a.GetHashCode()).ToString())) {
+				node = String.Format (@"var {0} = graph.newNode({{label: '{1}'}});","_"+Math.Abs(t.GetHashCode()).ToString(),t.name);
+				sw.Write (node);
+			}
+			if (t.left != null) {
+				nodeL = String.Format (@"var {0} = graph.newNode({{label: '{1}'}});","_"+Math.Abs(t.left.GetHashCode()).ToString(),t.left.name);
+				edge1 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#00A0B0'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.left.GetHashCode()).ToString());
+				sw.Write (nodeL);
+				sw.Write (edge1);
+			}
+			if (t.right != null) {
+				nodeR = String.Format (@"var {0} = graph.newNode({{label: '{1}'}});","_"+Math.Abs(t.right.GetHashCode()).ToString(),t.right.name);
+				edge2 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#00A0B0'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.right.GetHashCode()).ToString());
+				sw.Write (nodeR);
+				sw.Write (edge2);
+			}
+			if (t.rightright != null) {
+				nodeRR = String.Format (@"var {0} = graph.newNode({{label: '{1}'}});","_"+Math.Abs(t.rightright.GetHashCode()).ToString(),t.rightright.name);
+				edge3 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#00A0B0'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.rightright.GetHashCode()).ToString());
+				sw.Write (nodeRR);
+				sw.Write (edge3);
+			}
+			if (t.sibling != null) {
+				nodeS = String.Format (@"var {0} = graph.newNode({{label: '{1}'}});","_"+Math.Abs(t.sibling.GetHashCode()).ToString(),t.sibling.name);
+				edge4 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#00A0B0'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.sibling.GetHashCode()).ToString());
+				sw.Write (nodeS);
+				sw.Write (edge4);
+			}
+			makeSpringy (t.left,t);
+			makeSpringy (t.right,t);
+			makeSpringy (t.rightright,t);
+			makeSpringy (t.sibling, t);
+		}
+		return;
 	}
 
 	private void subprint(TreeNode t){
