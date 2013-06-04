@@ -1,8 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="AnalizadorSintactico/AnalizadorSintactico.cs">
     <Files>
-      <File FileName="AnalizadorSintactico/AnalizadorSintactico.cs" Line="74" Column="1" />
+      <File FileName="AnalizadorSintactico/AnalizadorSintactico.cs" Line="34" Column="29" />
+      <File FileName="AnalizadorSintactico/Program.cs" Line="8" Column="15" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -17,19 +18,15 @@
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
-          <Value>token.tt</Value>
-          <Value>token.lexema</Value>
           <Value>t</Value>
           <Value>n</Value>
+          <Value>token.tt</Value>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/ogarcia/Projects/AnalizadorSintactico/AnalizadorSintactico/AnalizadorSintactico.cs" line="55" column="1" />
-      <Breakpoint file="/Users/ogarcia/Projects/AnalizadorSintactico/AnalizadorSintactico/AnalizadorSintactico.cs" line="81" column="73" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

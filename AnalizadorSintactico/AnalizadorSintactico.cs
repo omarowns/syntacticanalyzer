@@ -171,7 +171,7 @@ public class AnalizadorSintactico
 		if (token.tt == expected) {
 			token = al.analizador ();
 		} else {
-			error ();
+			error ("Unexpected token ->");
 		}
 	}
 	private void error(){
