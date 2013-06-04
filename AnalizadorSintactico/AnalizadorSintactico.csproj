@@ -19,7 +19,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <Externalconsole>true</Externalconsole>
-    <Commandlineparameters>"/Users/ogarcia/Projects/AnalizadorSintactico/test/programa0.txt"</Commandlineparameters>
+    <Commandlineparameters>"/Users/ogarcia/Projects/AnalizadorSintactico/test/programa2.txt"</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>

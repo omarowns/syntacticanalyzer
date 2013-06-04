@@ -123,19 +123,19 @@ public class AnalizadorSintactico
 			}
 			if (t.right != null) {
 				nodeR = String.Format (@"var {0} = graph.newNode({{label: '{1}'}});","_"+Math.Abs(t.right.GetHashCode()).ToString(),t.right.name);
-				edge2 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#00A0B0'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.right.GetHashCode()).ToString());
+				edge2 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#A0B000'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.right.GetHashCode()).ToString());
 				sw.Write (nodeR);
 				sw.Write (edge2);
 			}
 			if (t.rightright != null) {
 				nodeRR = String.Format (@"var {0} = graph.newNode({{label: '{1}'}});","_"+Math.Abs(t.rightright.GetHashCode()).ToString(),t.rightright.name);
-				edge3 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#00A0B0'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.rightright.GetHashCode()).ToString());
+				edge3 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#A000B0'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.rightright.GetHashCode()).ToString());
 				sw.Write (nodeRR);
 				sw.Write (edge3);
 			}
 			if (t.sibling != null) {
 				nodeS = String.Format (@"var {0} = graph.newNode({{label: '{1}'}});","_"+Math.Abs(t.sibling.GetHashCode()).ToString(),t.sibling.name);
-				edge4 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#00A0B0'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.sibling.GetHashCode()).ToString());
+				edge4 = String.Format (@"graph.newEdge({0}, {1}, {{color: '#A0A0A0'}});","_"+Math.Abs(t.GetHashCode()).ToString(),"_"+Math.Abs(t.sibling.GetHashCode()).ToString());
 				sw.Write (nodeS);
 				sw.Write (edge4);
 			}
@@ -158,6 +158,7 @@ public class AnalizadorSintactico
 			subprint (t.left);
 			subprint (t.right);
 			subprint (t.rightright);
+			subprint (t.sibling);
 		}
 		return;
 	}
@@ -298,6 +299,12 @@ public class AnalizadorSintactico
 			t = asign (); break;
 		case AnalizadorLexico.TipoToken.TK_IDENTIFICADOR:
 			t = asign (); break;
+		case AnalizadorLexico.TipoToken.TK_ELSE:
+			return null;
+		case AnalizadorLexico.TipoToken.TK_FI:
+			return null;
+		case AnalizadorLexico.TipoToken.TK_LLAVED:
+			return null;
 		default:
 			error ("Unexpected token -> ");
 			break;
@@ -308,16 +315,17 @@ public class AnalizadorSintactico
 	private TreeNode selection(){
 		TreeNode t = null;
 		t = createNode (TreeNode.NodeType.SELECT);
+		t.name = "if";
 		match (AnalizadorLexico.TipoToken.TK_IF);
 		match (AnalizadorLexico.TipoToken.TK_PARI);
 		if (t != null)
 			t.left = expresion ();
 		match (AnalizadorLexico.TipoToken.TK_PARD);
 		if (t != null)
-			t.right = block ();
+			t.right = block_nc ();
 		if (token.tt == AnalizadorLexico.TipoToken.TK_ELSE) {
 			match (AnalizadorLexico.TipoToken.TK_ELSE);
-			t.rightright = block ();
+			t.rightright = block_nc ();
 		}
 		match (AnalizadorLexico.TipoToken.TK_FI);
 		return t;
@@ -326,6 +334,7 @@ public class AnalizadorSintactico
 	private TreeNode iteration(){
 		TreeNode t = null;
 		t = createNode (TreeNode.NodeType.ITERATION);
+		t.name = "while";
 		match (AnalizadorLexico.TipoToken.TK_WHILE);
 		match (AnalizadorLexico.TipoToken.TK_PARI);
 		if(t!=null)
@@ -339,6 +348,7 @@ public class AnalizadorSintactico
 	private TreeNode repeat(){
 		TreeNode t = null;
 		t = createNode (TreeNode.NodeType.REPEAT);
+		t.name = "do-until";
 		match (AnalizadorLexico.TipoToken.TK_DO);
 		if (t != null)
 			t.left = block ();
@@ -383,17 +393,26 @@ public class AnalizadorSintactico
 		return t;
 	}
 
+	private TreeNode block_nc(){
+		TreeNode t = null;
+		t = createNode (TreeNode.NodeType.BLOCK);
+		t.left = sentence_list ();
+		return t;
+	}
+
 	private TreeNode asign(){
 		TreeNode t = null;
 		t = createNode (TreeNode.NodeType.ASIGN);
+		t.name = "=";
 		if ((t != null) && (token.tt == AnalizadorLexico.TipoToken.TK_IDENTIFICADOR)) {
-			t.name = token.lexema;
+			t.left = createNode (TreeNode.NodeType.ID);
+			t.left.name = token.lexema;
 		}
 		match (AnalizadorLexico.TipoToken.TK_IDENTIFICADOR);
 		match (AnalizadorLexico.TipoToken.TK_ASIGNACION);
 		if (t != null) {
 			//TODO Check if its right or left
-			t.left = expresion ();
+			t.right = expresion ();
 		}
 		match (AnalizadorLexico.TipoToken.TK_PUNTOYCOMA);
 		return t;
@@ -411,6 +430,26 @@ public class AnalizadorSintactico
 			(token.tt==AnalizadorLexico.TipoToken.TK_CDIFERENTE) ){
 			n = createNode(TreeNode.NodeType.RELATION);
 			if(n!=null){
+				switch (token.tt) {
+				case AnalizadorLexico.TipoToken.TK_MENORIGUAL:
+					n.name = "<=";
+					break;
+				case AnalizadorLexico.TipoToken.TK_MENOR:
+					n.name = "<";
+					break;
+				case AnalizadorLexico.TipoToken.TK_MAYOR:
+					n.name = ">";
+					break;
+				case AnalizadorLexico.TipoToken.TK_MAYORIGUAL:
+					n.name = ">=";
+					break;
+				case AnalizadorLexico.TipoToken.TK_CIGUALDAD:
+					n.name = "==";
+					break;
+				case AnalizadorLexico.TipoToken.TK_CDIFERENTE:
+					n.name = "!=";
+					break;
+				}
 				n.left = t;
 				n.op = token;
 				t = n;
@@ -428,6 +467,7 @@ public class AnalizadorSintactico
 		while( (token.tt==AnalizadorLexico.TipoToken.TK_SUMA) || (token.tt==AnalizadorLexico.TipoToken.TK_RESTA) ){
 			n = createNode (TreeNode.NodeType.SUMAOP);
 			if(n!=null){
+				n.name = token.tt == AnalizadorLexico.TipoToken.TK_SUMA ? "+" : "-";
 				n.left = t;
 				n.op = token;
 				t = n;
@@ -444,6 +484,7 @@ public class AnalizadorSintactico
 		while ((token.tt==AnalizadorLexico.TipoToken.TK_MULTIPLICACION) || (token.tt==AnalizadorLexico.TipoToken.TK_DIVISION)) {
 			n = createNode (TreeNode.NodeType.MULTOP);
 			if(n!= null){
+				n.name = token.tt == AnalizadorLexico.TipoToken.TK_MULTIPLICACION ? "*" : "/";
 				n.left = t;
 				n.op = token;
 				t = n;
@@ -466,6 +507,7 @@ public class AnalizadorSintactico
 		case AnalizadorLexico.TipoToken.TK_NUMERO:
 			t = createNode (TreeNode.NodeType.CONST);
 			t.value = int.Parse (token.lexema);
+			t.name = token.lexema;
 			match (AnalizadorLexico.TipoToken.TK_NUMERO);
 			break;
 		case AnalizadorLexico.TipoToken.TK_IDENTIFICADOR:
